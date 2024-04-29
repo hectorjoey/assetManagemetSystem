@@ -78,7 +78,16 @@ public class Asset implements Serializable {
     @Column(name = "emailAddress")
     private String emailAddress;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "phone")
+    private String phone;
+
     @Column(name = "status")
     private String status;
+
+    @Column(name = "receivedBy")
+    private String receivedBy;
 
 }

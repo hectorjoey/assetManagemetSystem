@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
@@ -41,11 +42,15 @@ public class UsersController {
     }
 
     @GetMapping({"user/{id}"})
-    public ResponseEntity<Users> getUserById(@PathVariable("id") final Long id) throws ResourceNotFoundException {
-
-        final Users user = this.userRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("User not found for this id :: " + id));
-        return ResponseEntity.ok().body(user);
+    public ResponseEntity<Users> getUserById(@PathVariable("id") final Long id) {
+        Optional<Users> optionalUsers = userRepository.findById(id);
+        if (optionalUsers.isPresent()) {
+            Users users = optionalUsers.get();
+            return ResponseEntity.ok().body(users);
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping({"user"})
@@ -90,7 +95,7 @@ public class UsersController {
         final Users user = this.userRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("User not found for this id :: " + id));
         this.userRepository.delete(user);
-        final Map<String, Boolean> response = new HashMap<String, Boolean>();
+        final Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return response;
     }

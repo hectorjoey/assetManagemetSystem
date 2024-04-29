@@ -30,5 +30,4 @@ public class Inventory implements Serializable {
     private String issuedTo;
     private String quantityIssued;
     private String balance;
-
    }

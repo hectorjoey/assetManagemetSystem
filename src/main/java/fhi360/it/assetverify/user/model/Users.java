@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Entity;
 
-
 @Data
 @Entity
 @Table(name = "users")
