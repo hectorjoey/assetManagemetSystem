@@ -78,8 +78,8 @@ public class Asset implements Serializable {
     @Column(name = "emailAddress")
     private String emailAddress;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "assignee")
+    private String assignee;
 
     @Column(name = "phone")
     private String phone;
