@@ -19,5 +19,4 @@ public interface AssetService {
     @Transactional
     Page<Asset> getAssets(Pageable pageable);
 
-    List<Asset> searchAssets(String query);
 }

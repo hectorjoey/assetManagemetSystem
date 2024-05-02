@@ -66,7 +66,7 @@ public class ExcelUtils {
                         } else if (cellIndex == 16) {
                             asset.setFacility(formatter.formatCellValue(currentCell));
                         } else if (cellIndex == 17) {
-                            asset.setLocationAndAssignee(formatter.formatCellValue(currentCell));
+                            asset.setLocation(formatter.formatCellValue(currentCell));
                         } else if (cellIndex == 18) {
                             asset.setStatus(formatter.formatCellValue(currentCell));
                         }

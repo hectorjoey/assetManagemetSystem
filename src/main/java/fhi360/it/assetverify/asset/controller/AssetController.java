@@ -12,6 +12,7 @@ import fhi360.it.assetverify.asset.model.Asset;
 import fhi360.it.assetverify.asset.repository.AssetRepository;
 import fhi360.it.assetverify.asset.service.AssetService;
 import fhi360.it.assetverify.asset.serviceImpl.AssetServiceImpl;
+import fhi360.it.assetverify.user.model.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -120,7 +121,8 @@ public class AssetController {
         final Asset asset2 = this.assetRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Asset not found for this id :: " + id));
         asset2.setEmailAddress(asset.getEmailAddress());
-        asset2.setLocationAndAssignee(asset.getLocationAndAssignee());
+        asset2.setLocation(asset.getLocation());
+        asset2.setAssignee(asset.getAssignee());
         asset2.setProject(asset.getProject());
         asset2.setFacility(asset.getFacility());
         asset2.setStatus(asset.getStatus());
@@ -228,7 +230,8 @@ public class AssetController {
         table.addCell(createCell("Condition", true));
         table.addCell(createCell("States", true));
         table.addCell(createCell("Facility", true));
-        table.addCell(createCell("Location And Assignee", true));
+        table.addCell(createCell("Location ", true));
+        table.addCell(createCell("Assignee ", true));
         table.addCell(createCell("Status", true));
         table.addCell(createCell("Email Address", true));
 
@@ -250,7 +253,8 @@ public class AssetController {
             table.addCell(createCell(obj.getCondition(), false));
             table.addCell(createCell(obj.getStates(), false));
             table.addCell(createCell(obj.getFacility(), false));
-            table.addCell(createCell(obj.getLocationAndAssignee(), false));
+            table.addCell(createCell(obj.getLocation(), false));
+            table.addCell(createCell(obj.getAssignee(), false));
             table.addCell(createCell(obj.getStatus(), false));
             table.addCell(createCell(obj.getEmailAddress(), false));
         }
@@ -299,7 +303,7 @@ public class AssetController {
                         obj.getDescription(), obj.getAssetId(), obj.getManufacturer(), obj.getModelNumber(), obj.getSerialNumber(),
                         obj.getPoNumber(), obj.getDateReceived(), obj.getPurchasedPriceInDollars(), obj.getPurchasePrice(), obj.getFunder(),
                         obj.getProject(), obj.getUsefulLifeSpan(), obj.getCurrentAgeOfAsset(), obj.getCondition(), obj.getStates(),
-                        obj.getFacility(), obj.getLocationAndAssignee(), obj.getStatus(), obj.getEmailAddress()
+                        obj.getFacility(), obj.getLocation(), obj.getStatus(), obj.getEmailAddress()
                 };
                 csvWriter.writeNext(row);
             }
@@ -355,7 +359,7 @@ public class AssetController {
                         obj.getDescription(), obj.getAssetId(), obj.getManufacturer(), obj.getModelNumber(), obj.getSerialNumber(),
                         obj.getPoNumber(), obj.getDateReceived(), obj.getPurchasedPriceInDollars(), obj.getPurchasePrice(), obj.getFunder(),
                         obj.getProject(), obj.getUsefulLifeSpan(), obj.getCurrentAgeOfAsset(), obj.getCondition(), obj.getStates(),
-                        obj.getFacility(), obj.getLocationAndAssignee(), obj.getStatus(), obj.getEmailAddress()
+                        obj.getFacility(), obj.getLocation(), obj.getStatus(), obj.getEmailAddress()
                 };
                 csvWriter.writeNext(row);
             }
@@ -385,8 +389,17 @@ public class AssetController {
         }
     }
 
+//    @GetMapping({"search/asset/{keyword}"})
+//    public Page<Asset> searchAssets(final Pageable pageable, @PathVariable("keyword") final String keyword) {
+//        return assetRepository.findAll(pageable, keyword);
+//    }
+
     @GetMapping("asset/search")
-    public ResponseEntity<List<Asset>> searchAsset(@RequestParam("query") String query){
-        return ResponseEntity.ok(assetService.searchAssets(query));
+    public ResponseEntity<Page<Asset>> searchAssets(@RequestParam("query") String query, Pageable pageable) {
+        Page<Asset> searchedAssets = assetServices.searchAssets(query, pageable);
+        if (searchedAssets.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(searchedAssets);
     }
 }

@@ -60,7 +60,7 @@ public class AssetLogController {
         Asset asset = assetRepository.findById(assetLog.getAssetsId()).orElse(null);
         if (asset != null) {
             asset.setEmailAddress(assetLog.getEmailAddress());
-            asset.setLocationAndAssignee(assetLog.getLocationAndAssignee());
+            asset.setLocation(assetLog.getAssignee());
             asset.setStatus(assetLog.getStatus());
             asset.setStates(assetLog.getStates());
             asset.setCondition(assetLog.getCondition());
@@ -120,7 +120,7 @@ public class AssetLogController {
             csvContent.append(assetLog.getCondition()).append(",");
             csvContent.append(assetLog.getStates()).append(",");
             csvContent.append(assetLog.getFacility()).append(",");
-            csvContent.append(assetLog.getLocationAndAssignee()).append(",");
+            csvContent.append(assetLog.getLocation()).append(",");
             csvContent.append(assetLog.getEmailAddress()).append(",");
             csvContent.append(assetLog.getPhone()).append(",");
             csvContent.append(assetLog.getStatus()).append("\n");
@@ -223,7 +223,7 @@ public class AssetLogController {
             table.addCell(createCell(assetLog.getCondition(), false));
             table.addCell(createCell(assetLog.getStates(), false));
             table.addCell(createCell(assetLog.getFacility(), false));
-            table.addCell(createCell(assetLog.getLocationAndAssignee(), false));
+            table.addCell(createCell(assetLog.getLocation(), false));
             table.addCell(createCell(assetLog.getEmailAddress(), false));
             table.addCell(createCell(assetLog.getPhone(), false));
             table.addCell(createCell(assetLog.getStatus(), false));

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,10 +23,12 @@ public interface AssetRepository extends JpaRepository<Asset, Long> {
 
     List<Asset> findByStates(String state);
 
+    @Query("Select a from Asset a where lower (a.assetId) =:keyword OR lower (a.emailAddress) =:keyword OR lower (a.phone) =:keyword OR lower(a.serialNumber)=:keyword ")
+    Page<Asset> findAll(final Pageable pageable, @Param("keyword") final String keyword);
+
     @Query("SELECT a FROM Asset a WHERE " +
-            "a.assetId LIKE CONCAT('%',:query, '%')" +
-            "Or a.emailAddress LIKE CONCAT('%', :query, '%')" +
-            "Or a.serialNumber LIKE CONCAT('%', :query, '%')" +
-            "Or a.states LIKE CONCAT('%', :query, '%')")
-    List<Asset> searchAssets(String query);
+            "a.serialNumber LIKE CONCAT('%', :query, '%') " +  // Add space after '%'
+            "OR a.assetId LIKE CONCAT('%', :query, '%')")      // Add space after '%'
+    Page<Asset> searchAsset(String query, Pageable pageable);
+
 }

@@ -64,7 +64,10 @@ public class AssetLog {
     private String facility;
 
     @Column(name = "locationAndAssignee")
-    private String locationAndAssignee;
+    private String location;
+
+    @Column(name = "Assignee")
+    private String assignee;
 
     @Column(name = "emailAddress")
     private String emailAddress;

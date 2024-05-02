@@ -26,7 +26,10 @@ public class AssetDto {
     private String condition;
     private String states;
     private String facility;
-    private String locationAndAssignee;
+    private String location;
     private String emailAddress;
+    private String assignee;
+    private String phone;
     private String status;
+    private String receivedBy;
 }

@@ -59,7 +59,6 @@ public class Asset implements Serializable {
     @Column(name = "usefulLifeSpan")
     private String usefulLifeSpan;
 
-    @Setter
     @Column(name = "currentAgeOfAsset")
     private String currentAgeOfAsset;
 
@@ -72,8 +71,11 @@ public class Asset implements Serializable {
     @Column(name = "facility")
     private String facility;
 
-    @Column(name = "locationAndAssignee")
-    private String locationAndAssignee;
+//    @Column(name = "locationAndAssignee")
+//    private String locationAndAssignee;
+
+    @Column(name = "location")
+    private String location;
 
     @Column(name = "emailAddress")
     private String emailAddress;

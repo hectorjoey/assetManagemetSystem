@@ -76,9 +76,9 @@ public class AssetServiceImpl implements AssetService {
         return result;
     }
 
-    @Override
-    public List<Asset> searchAssets(String query) {
-        List<Asset> assetList = assetRepository.searchAssets(query);
+
+    public Page<Asset> searchAssets(String query, Pageable pageable) {
+        Page<Asset> assetList = assetRepository.searchAsset(query, pageable);
         return assetList;
     }
 
