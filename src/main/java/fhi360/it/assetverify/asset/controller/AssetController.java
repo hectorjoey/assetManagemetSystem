@@ -116,21 +116,24 @@ public class AssetController {
     }
 
     @PatchMapping({"asset/{id}"})
-    public Asset updateAsset(@PathVariable("id") final long id, @Valid @RequestBody final AssetDto asset) throws ResourceNotFoundException, MessagingException {
+    public ResponseEntity<Asset> updateAsset(@PathVariable("id") final long id, @Valid @RequestBody final AssetDto assetDto) throws MessagingException {
         log.debug("Update Asset with Id = {}", id);
-        final Asset asset2 = this.assetRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Asset not found for this id :: " + id));
-        asset2.setEmailAddress(asset.getEmailAddress());
-        asset2.setLocation(asset.getLocation());
-        asset2.setAssignee(asset.getAssignee());
-        asset2.setProject(asset.getProject());
-        asset2.setFacility(asset.getFacility());
-        asset2.setStatus(asset.getStatus());
-        asset2.setStates(asset.getStates());
-        asset2.setCondition(asset.getCondition());
-        final Asset updatedAsset = this.assetRepository.save(asset2);
-        log.debug("Updated Asset {}", updatedAsset);
-        return this.assetRepository.save(updatedAsset);
+        Optional<Asset> optionalAsset = this.assetRepository.findById(id);
+        if (optionalAsset.isPresent()){
+            Asset asset = optionalAsset.get();
+            asset.setEmailAddress(assetDto.getEmailAddress());
+            asset.setLocation(assetDto.getLocation());
+            asset.setAssignee(assetDto.getAssignee());
+            asset.setProject(assetDto.getProject());
+            asset.setFacility(assetDto.getFacility());
+            asset.setStatus(assetDto.getStatus());
+            asset.setStates(assetDto.getStates());
+            asset.setPhone(assetDto.getPhone());
+            asset.setCondition(assetDto.getCondition());
+            return new ResponseEntity<>(assetRepository.save(asset), HttpStatus.OK);
+        }else {
+           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping({"asset/{id}"})
@@ -210,7 +213,7 @@ public class AssetController {
 
 
     private void addDataToPDF(Document document, List<Asset> data) throws DocumentException {
-        PdfPTable table = new PdfPTable(19); // Number of columns
+        PdfPTable table = new PdfPTable(20); // Number of columns
         table.setWidthPercentage(100); // Set table width to 100% of the page
 
         // Set table headers
