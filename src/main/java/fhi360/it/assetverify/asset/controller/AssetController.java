@@ -46,16 +46,16 @@ public class AssetController {
     private final AssetService assetService;
     private final AssetServiceImpl assetServices;
 
-    @GetMapping({"assets"})
-    public Page<Asset> getAllAssets(final Pageable pageable) {
-        return this.assetRepository.findByOrderById(pageable);
-    }
-
-
 //    @GetMapping({"assets"})
 //    public Page<Asset> getAllAssets(final Pageable pageable) {
-//        return this.assetRepository.findByOrderByIdAsc(pageable);
+//        return this.assetRepository.findByOrderById(pageable);
 //    }
+
+
+    @GetMapping({"assets"})
+    public Page<Asset> getAllAssets(final Pageable pageable) {
+        return this.assetRepository.findByOrderByIdAsc(pageable);
+    }
 
     @GetMapping({"asset/assets"})
     public Page<Asset> getAssets(final Pageable pageable) {
@@ -116,7 +116,7 @@ public class AssetController {
     }
 
     @PatchMapping({"asset/{id}"})
-    public ResponseEntity<Asset> updateAsset(@PathVariable("id") final long id, @Valid @RequestBody final AssetDto assetDto) throws MessagingException {
+    public ResponseEntity<Asset> updateAsset(@PathVariable("id") final long id, @Valid @RequestBody final AssetDto assetDto) {
         log.debug("Update Asset with Id = {}", id);
         Optional<Asset> optionalAsset = this.assetRepository.findById(id);
         if (optionalAsset.isPresent()){
@@ -130,6 +130,7 @@ public class AssetController {
             asset.setStates(assetDto.getStates());
             asset.setPhone(assetDto.getPhone());
             asset.setCondition(assetDto.getCondition());
+            asset.setApprovedBy(assetDto.getApprovedBy());
             return new ResponseEntity<>(assetRepository.save(asset), HttpStatus.OK);
         }else {
            return new ResponseEntity<>(HttpStatus.NOT_FOUND);

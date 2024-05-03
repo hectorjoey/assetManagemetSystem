@@ -1,12 +1,9 @@
-package fhi360.it.assetverify.service;
+package fhi360.it.assetverify.files;
 
 import fhi360.it.assetverify.asset.model.Asset;
 import fhi360.it.assetverify.inventory.model.Inventory;
-import fhi360.it.assetverify.model.Item;
 import fhi360.it.assetverify.asset.repository.AssetRepository;
 import fhi360.it.assetverify.inventory.repository.InventoryRepository;
-import fhi360.it.assetverify.repository.ItemRepository;
-import fhi360.it.assetverify.util.ExcelUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,9 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class FileServices {
-    public static String TYPE;
     private final AssetRepository assetRepository;
-    private final ItemRepository itemRepository;
     private final InventoryRepository inventoryRepository;
 
     public void save(final MultipartFile files) {

@@ -1,4 +1,4 @@
-package fhi360.it.assetverify.util;
+package fhi360.it.assetverify.files;
 
 import fhi360.it.assetverify.asset.model.Asset;
 import fhi360.it.assetverify.inventory.model.Inventory;
@@ -129,7 +129,7 @@ public class ExcelUtils {
                     } catch (Exception ex) {
                         // Log the row content for debugging
                         System.out.println("Error processing row {}: {}" + " " + rowNumber + " " + ex.getMessage());
-                        throw ex; // Rethrow the exception after logging
+                        throw ex;
                     }
                 }
             }

@@ -89,7 +89,7 @@ public class Asset implements Serializable {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "receivedBy")
-    private String receivedBy;
+    @Column(name = "approvedBy")
+    private String approvedBy;
 
 }

@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -31,5 +29,5 @@ public class AssetDto {
     private String assignee;
     private String phone;
     private String status;
-    private String receivedBy;
+    private String approvedBy;
 }

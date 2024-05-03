@@ -135,13 +135,9 @@ public class AssetServiceImpl implements AssetService {
         return date;
     }
 
-
-
-
     private int calculateAgeOfAsset(LocalDate dateReceived, LocalDate currentDate) {
         return Period.between(dateReceived, currentDate).getYears();
     }
-
 
     public ResponseEntity<Page<Asset>> getAssetsByState(String state, Pageable pageable) {
         Page<Asset> assets = assetRepository.findByStates(state, pageable);
@@ -158,6 +154,4 @@ public class AssetServiceImpl implements AssetService {
         }
         return assets;
     }
-
-
 }
