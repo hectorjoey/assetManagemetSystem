@@ -10,6 +10,7 @@ import fhi360.it.assetverify.issueLog.model.IssueLog;
 import fhi360.it.assetverify.inventory.repository.InventoryRepository;
 import fhi360.it.assetverify.issueLog.repository.IssueLogRepository;
 import fhi360.it.assetverify.issueLog.service.IssueLogService;
+import fhi360.it.assetverify.issueLog.serviceImpl.IssueLogServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,7 +36,7 @@ import java.util.Optional;
 public class IssueLogController {
     private final IssueLogRepository issueLogRepository;
     private final IssueLogService issueLogService;
-    private final InventoryRepository inventoryRepository;
+    private final IssueLogServiceImpl issueLogServices;
 
     @GetMapping("all-issuelogs")
     List<IssueLog> getIssueLogs() {
@@ -47,34 +48,13 @@ public class IssueLogController {
         return issueLogService.getAllIssueLogs(pageable);
     }
 
-    @PostMapping("issuelog")
-    ResponseEntity<IssueLog> addIssueLog(@RequestBody IssueLog issueLog) {
-        String quantityIssued = issueLog.getQuantityIssued();
-        String issuedTo = issueLog.getIssuedTo();
-
-        Optional<Inventory> optionalInventory = inventoryRepository.findById(issueLog.getInventoryId());
-
-        if (optionalInventory.isPresent()) {
-            Inventory inventory = optionalInventory.get();
-            inventory.setIssuedTo(issuedTo);
-            inventory.setQuantityIssued(quantityIssued);
-            inventory.setDateIssued(issueLog.getDateIssued());
-            inventory.setBalance(calBalance(issueLog.getBalance(), issueLog.getQuantityIssued()));
-
-            inventoryRepository.save(inventory);
-
-            issueLog.setBalance(calBalance(issueLog.getBalance(), issueLog.getQuantityIssued()));
-        }
-
-        return new ResponseEntity<>(issueLogRepository.save(issueLog), HttpStatus.CREATED);
+    @PostMapping("issuelogs")
+    public ResponseEntity<IssueLog> addIssueLog(@RequestBody IssueLog issueLog) {
+        return issueLogServices.createIssueLog(issueLog);
     }
 
-    private String calBalance(String balance, String quantityIssued) {
-        int stockBalance = Integer.parseInt(balance) - Integer.parseInt(quantityIssued);
-        return String.valueOf(stockBalance);
-    }
 
-    @GetMapping("issuelog/{id}")
+    @GetMapping("issuelogs/{id}")
     public ResponseEntity<IssueLog> getBinCardById(@PathVariable(value = "id") Long id)
             throws ResourceNotFoundException {
         IssueLog issueLog = issueLogRepository.findById(id)
@@ -88,7 +68,7 @@ public class IssueLogController {
 //        return issueLogRepository.findAll(pageable, keyword);
 //    }
 
-    @GetMapping("issuelog/inventory/{inventoryId}")
+    @GetMapping("issuelogs/inventory/{inventoryId}")
     public List<IssueLog> getIssueLogByInventoryId(@PathVariable Long inventoryId) {
         return issueLogRepository.findByInventoryId(inventoryId);
     }

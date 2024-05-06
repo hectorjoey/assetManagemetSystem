@@ -1,5 +1,6 @@
 package fhi360.it.assetverify.issueLog.serviceImpl;
 
+import fhi360.it.assetverify.inventory.model.Inventory;
 import fhi360.it.assetverify.inventory.repository.InventoryRepository;
 import fhi360.it.assetverify.issueLog.model.IssueLog;
 import fhi360.it.assetverify.issueLog.repository.IssueLogRepository;
@@ -7,9 +8,13 @@ import fhi360.it.assetverify.issueLog.service.IssueLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -62,26 +67,33 @@ public class IssueLogServiceImpl implements IssueLogService {
         return issueLogRepository.findByDateReceived(dateReceived);
     }
 
-//    public void exportToCsv(List<IssueLog> issueLogs, PrintWriter writer) {
-//        // Write CSV header
-//        writer.println("Id,Date,State,Description,Quantity Received, Vendor, Unit,Stock State,PO Number" +
-//                "Received From,Issued To,Quantity Received" +
-//                "Quantity Issued,Opening Balance,Balance,Inventory Id," +
-//                "Total");
-//
-//        // Write CSV data
-//        for (IssueLog issueLog : issueLogs) {
-//            writer.println(String.format("%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
-//                    issueLog.getId(), issueLog.getDate(), issueLog.getState(),
-//                    issueLog.getDescription(), issueLog.getQuantityReceived(), issueLog.getVendor(),
-//                    issueLog.getUnit(), issueLog.getStockState(), issueLog.getPoNumber(),
-//                    issueLog.getQuantityIssued(), issueLog.getOpeningBalance(), issueLog.getBalance(),
-//                    issueLog.getTotal()));
-//        }
-//    }
+    public ResponseEntity<IssueLog> createIssueLog(IssueLog issueLog){
+        String quantityIssued = issueLog.getQuantityIssued();
+        String issuedTo = issueLog.getIssuedTo();
+        Optional<Inventory> optionalInventory = inventoryRepository.findById(issueLog.getInventoryId());
 
+        if (optionalInventory.isPresent()) {
+            Inventory inventory = optionalInventory.get();
+            inventory.setIssuedTo(issuedTo);
+            inventory.setQuantityIssued(quantityIssued);
+            inventory.setDateIssued(issueLog.getDateIssued());
+            inventory.setBalance(calBalance(issueLog.getBalance(), issueLog.getQuantityIssued()));
 
-//    public List<IssueLog> findByItemDescription(String itemDescription) {
-//        return issueLogRepository.findByItemDescription(itemDescription);
-//    }
+            inventoryRepository.save(inventory);
+
+            issueLog.setBalance(calBalance(issueLog.getBalance(), issueLog.getQuantityIssued()));
+
+            System.out.println("issue Log" + issueLog);
+        }else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        System.out.println("issue Log" + issueLog);
+        return new ResponseEntity<>(issueLogRepository.save(issueLog), HttpStatus.CREATED);
+    }
+
+    private String calBalance(String balance, String quantityIssued) {
+        int stockBalance = Integer.parseInt(balance) - Integer.parseInt(quantityIssued);
+        return String.valueOf(stockBalance);
+    }
 }

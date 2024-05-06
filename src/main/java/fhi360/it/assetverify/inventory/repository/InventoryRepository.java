@@ -1,5 +1,6 @@
 package fhi360.it.assetverify.inventory.repository;
 
+import fhi360.it.assetverify.asset.model.Asset;
 import fhi360.it.assetverify.inventory.model.Inventory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,5 +26,12 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     Inventory findOneByDescription(String description);
 
     Page<Inventory> findByStates(String state, Pageable pageable);
+
+
+    @Query("SELECT i FROM Inventory i WHERE " +
+            "i.description LIKE CONCAT('%', :query, '%') " +
+            "OR i.states LIKE CONCAT('%', :query, '%')" +
+            "OR i.poNumber LIKE CONCAT('%', :query, '%')")
+    Page<Inventory> searchInventory(String query, Pageable pageable);
 
 }
