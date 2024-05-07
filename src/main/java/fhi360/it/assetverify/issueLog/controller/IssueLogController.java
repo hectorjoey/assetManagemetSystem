@@ -53,7 +53,6 @@ public class IssueLogController {
         return issueLogServices.createIssueLog(issueLog);
     }
 
-
     @GetMapping("issuelogs/{id}")
     public ResponseEntity<IssueLog> getBinCardById(@PathVariable(value = "id") Long id)
             throws ResourceNotFoundException {
