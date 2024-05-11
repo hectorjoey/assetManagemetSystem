@@ -4,8 +4,11 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import fhi360.it.assetverify.asset.dto.AssetDto;
+import fhi360.it.assetverify.asset.model.Asset;
 import fhi360.it.assetverify.exception.ResourceNotFoundException;
 import fhi360.it.assetverify.inventory.model.Inventory;
+import fhi360.it.assetverify.issueLog.dto.IssueLogDto;
 import fhi360.it.assetverify.issueLog.model.IssueLog;
 import fhi360.it.assetverify.inventory.repository.InventoryRepository;
 import fhi360.it.assetverify.issueLog.repository.IssueLogRepository;
@@ -22,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -37,6 +41,7 @@ public class IssueLogController {
     private final IssueLogRepository issueLogRepository;
     private final IssueLogService issueLogService;
     private final IssueLogServiceImpl issueLogServices;
+    private final InventoryRepository inventoryRepository;
 
     @GetMapping("all-issuelogs")
     List<IssueLog> getIssueLogs() {
@@ -127,5 +132,41 @@ public class IssueLogController {
 
             document.close();
         }
+    }
+
+    @PatchMapping({"issuelogs/{id}"})
+    public ResponseEntity<IssueLog> updateIssueLog(@PathVariable("id") final long id, @Valid @RequestBody final IssueLogDto issueLogDto) {
+        Optional<IssueLog> optionalIssueLog = this.issueLogRepository.findById(id);
+        if (optionalIssueLog.isPresent()) {
+            IssueLog issueLog = optionalIssueLog.get();
+            Optional<Inventory> optionalInventory = inventoryRepository.findById(issueLog.getInventoryId());
+            if (optionalInventory.isPresent()) {
+                Inventory inventory = optionalInventory.get();
+                issueLog.setQuantityIssued(issueLogDto.getQuantityIssued());
+                issueLog.setIssuedTo(issueLogDto.getIssuedTo());
+                issueLog.setBalance(updateBalance(issueLog.getBalance(), inventory.getQuantityIssued(), issueLogDto.getQuantityIssued()));
+                inventory.setBalance(issueLog.getBalance());
+                inventory.setIssuedTo(issueLogDto.getIssuedTo());
+                inventory.setQuantityIssued(issueLogDto.getQuantityIssued());
+            }
+            return new ResponseEntity<>(issueLogRepository.save(issueLog), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    private String updateBalance(String balance, String quantityIssued, String issuedQuantity) {
+        int agg = Integer.parseInt(balance) + Integer.parseInt(quantityIssued);
+        int totalBalance = agg - Integer.parseInt(issuedQuantity);
+
+        System.out.println("init balance:: " + balance);
+        System.out.println("Quantity Issued :: " + quantityIssued);
+        System.out.println("DTO Issued :: " + issuedQuantity);
+        System.out.println("Agg :: " + agg);
+        System.out.println("total Balance :: " + totalBalance);
+
+        return String.valueOf(totalBalance);
+
+
     }
 }

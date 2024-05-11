@@ -1,6 +1,5 @@
 package fhi360.it.assetverify.inventory.serviceImpl;
 
-import fhi360.it.assetverify.asset.model.Asset;
 import fhi360.it.assetverify.inventory.dto.InventoryDto;
 import fhi360.it.assetverify.inventory.model.Inventory;
 import fhi360.it.assetverify.inventory.repository.InventoryRepository;
@@ -18,11 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 
 @RequiredArgsConstructor
 @Transactional
@@ -63,43 +58,6 @@ public class InventoryServiceImpl implements InventoryService {
         return inventoryRepository.findAll(pageable);
     }
 
-//    @Override
-//    public InventoryDto createInventory(InventoryDto inventoryDTO) {
-//        // Map DTO to entity
-//        Inventory inventory = new Inventory();
-//        inventory.setStates(inventoryDTO.getStates());
-//        inventory.setDescription(inventoryDTO.getDescription());
-//        inventory.setVendor(inventoryDTO.getVendor());
-//        inventory.setDateReceived(inventoryDTO.getDateReceived());
-//        inventory.setPoNumber(inventoryDTO.getPoNumber());
-//        inventory.setUnit(inventoryDTO.getUnit());
-//        inventory.setStockState(inventoryDTO.getStockState());
-//        inventory.setQuantityReceived(inventoryDTO.getQuantityReceived());
-//        inventory.setBalance(calculateBalance(inventoryDTO.getQuantityReceived(), inventoryDTO.getBalance()));
-//
-//        // Save inventory
-//       inventoryRepository.save(inventory);
-//
-//        // Create corresponding issue log
-//        IssueLog issueLog = createIssueLog(inventory);
-//
-//        // Save issue log
-//        issueLogRepository.save(issueLog);
-//
-//        // Map entity back to DTO and return
-//        return mapToDTO(inventory);
-//    }
-//
-
-//
-//    private String calculateBalance(String quantityReceived, String balance) {
-//        if (balance == null) {
-//            balance = String.valueOf(0); // Set balance to 0 if it's null
-//        }
-//
-//        int closingBalance = Integer.parseInt(balance) + Integer.parseInt(quantityReceived);
-//        return String.valueOf(closingBalance);
-//    }
 
     @Override
     public InventoryDto createInventory(InventoryDto inventoryDTO) {
@@ -144,15 +102,10 @@ public class InventoryServiceImpl implements InventoryService {
         inventoryDto.setStockState(inventory.getStockState());
         inventoryDto.setQuantityReceived(inventory.getQuantityReceived());
         inventoryDto.setBalance(inventory.getBalance());
-//        inventoryDto.setIssuedTo(inventory.getIssuedTo());
-//        inventoryDto.setQuantityIssued(inventory.getQuantityIssued());
         return inventoryDto;
     }
     //
     private IssueLog createIssueLog(Inventory inventory) {
-        // Logic to create issue log from inventory
-        // You can populate issue log fields based on inventory data
-        // For simplicity, let's assume some fields are copied directly
         IssueLog issueLog = new IssueLog();
         issueLog.setStates(inventory.getStates());
         issueLog.setDescription(inventory.getDescription());
