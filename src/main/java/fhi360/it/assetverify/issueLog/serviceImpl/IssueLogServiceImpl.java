@@ -54,7 +54,7 @@ public class IssueLogServiceImpl implements IssueLogService {
 
     @Override
     public Page<IssueLog> searchByDate(String startDate, String endDate, Pageable pageable) {
-        return issueLogRepository.findByDateReceivedBetween(startDate, endDate, pageable);
+        return issueLogRepository.findByDateIssuedBetween(startDate, endDate, pageable);
     }
 
     public List<IssueLog> findByDescription(String description) {

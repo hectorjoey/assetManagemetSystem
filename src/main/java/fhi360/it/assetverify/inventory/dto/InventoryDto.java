@@ -13,8 +13,9 @@ public class InventoryDto {
     private String unit;
     private String stockState;
     private String quantityReceived;
-//    private String issuedTo;
-//    private String quantityIssued;
+    private String dateIssued;
+    private String issuedTo;
+    private String quantityIssued;
 //    private String total;
     private String balance;
 }
