@@ -158,15 +158,6 @@ public class IssueLogController {
     private String updateBalance(String balance, String quantityIssued, String issuedQuantity) {
         int agg = Integer.parseInt(balance) + Integer.parseInt(quantityIssued);
         int totalBalance = agg - Integer.parseInt(issuedQuantity);
-
-        System.out.println("init balance:: " + balance);
-        System.out.println("Quantity Issued :: " + quantityIssued);
-        System.out.println("DTO Issued :: " + issuedQuantity);
-        System.out.println("Agg :: " + agg);
-        System.out.println("total Balance :: " + totalBalance);
-
         return String.valueOf(totalBalance);
-
-
     }
 }
