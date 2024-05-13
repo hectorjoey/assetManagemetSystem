@@ -29,4 +29,6 @@ public interface IssueLogRepository extends JpaRepository<IssueLog, Long> {
     List<IssueLog> findByDescription(String description);
 
     List<IssueLog> findByDateReceived(String date);
+
+    List<IssueLog> findByStates(String states, Pageable pageable);
 }

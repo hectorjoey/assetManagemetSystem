@@ -40,17 +40,17 @@ public class InventoryServiceImpl implements InventoryService {
         return inventoryRepository.findByDateReceivedBetween(startDate, endDate, pageable);
     }
 
-    @Override
-    public List<Inventory> findByDateReceivedBetween(String startDate, String endDate) {
-        // Implementation for date range search without pagination
-        return inventoryRepository.findByDateReceivedBetween(startDate, endDate);
-    }
+//    @Override
+//    public List<Inventory> findByDateReceivedBetween(String startDate, String endDate) {
+//        // Implementation for date range search without pagination
+//        return inventoryRepository.findByDateReceivedBetween(startDate, endDate);
+//    }
 
-    @Override
-    public Page<Inventory> findByDateReceivedBetween(String startDate, String endDate, Pageable pageable) {
-        // Implementation for date range search with pagination
-        return inventoryRepository.findByDateReceivedBetween(startDate, endDate, pageable);
-    }
+//    @Override
+//    public Page<Inventory> findByDateReceivedBetween(String startDate, String endDate, Pageable pageable) {
+//        // Implementation for date range search with pagination
+//        return inventoryRepository.findByDateReceivedBetween(startDate, endDate, pageable);
+//    }
 
     @Override
     public Page<Inventory> findAll(Pageable pageable) {
@@ -59,12 +59,11 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
 
-    @Override
     public InventoryDto createInventory(InventoryDto inventoryDTO) {
         // Map DTO to entity
         Inventory inventory = new Inventory();
         inventory.setStates(inventoryDTO.getStates());
-        inventory.setDescription(inventoryDTO.getDescription());
+        inventory.setDescription(inventoryDTO.getDescription()+"("+inventory.getStates()+")");
         inventory.setVendor(inventoryDTO.getVendor());
         inventory.setDateReceived(inventoryDTO.getDateReceived());
         inventory.setPoNumber(inventoryDTO.getPoNumber());

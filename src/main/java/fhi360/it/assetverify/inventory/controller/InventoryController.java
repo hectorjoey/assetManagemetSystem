@@ -6,15 +6,12 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.opencsv.CSVWriter;
-import fhi360.it.assetverify.asset.model.Asset;
 import fhi360.it.assetverify.inventory.dto.InventoryDto;
 import fhi360.it.assetverify.exception.ResourceNotFoundException;
 import fhi360.it.assetverify.inventory.model.Inventory;
 import fhi360.it.assetverify.inventory.repository.InventoryRepository;
 import fhi360.it.assetverify.inventory.service.InventoryService;
 import fhi360.it.assetverify.inventory.serviceImpl.InventoryServiceImpl;
-import fhi360.it.assetverify.issueLog.dto.IssueLogDto;
-import fhi360.it.assetverify.issueLog.model.IssueLog;
 import fhi360.it.assetverify.issueLog.service.IssueLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -68,8 +65,7 @@ public class InventoryController {
 
     @PostMapping("/inventory")
     public ResponseEntity<InventoryDto> createInventory(@RequestBody InventoryDto inventoryDTO) {
-        InventoryDto createdInventory = inventoryService.createInventory(inventoryDTO);
-        return new ResponseEntity<>(createdInventory, HttpStatus.CREATED);
+        return new ResponseEntity<>(inventoryServices.createInventory(inventoryDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("inventories/{state}")
@@ -119,9 +115,9 @@ public class InventoryController {
 
     @GetMapping("searches")
     public Page<Inventory> search(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate, @RequestParam("page") int page) {
-        DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate start = LocalDate.parse(startDate, inputFormat);
-        LocalDate end = LocalDate.parse(endDate, inputFormat);
+        DateTimeFormatter inputFormats = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate start = LocalDate.parse(startDate, inputFormats);
+        LocalDate end = LocalDate.parse(endDate, inputFormats);
 
         DateTimeFormatter desiredFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedStartDate = start.format(desiredFormat);
@@ -183,9 +179,6 @@ public class InventoryController {
             table.addCell(createCell(obj.getUnit(), false));
             table.addCell(createCell(obj.getStockState(), false));
             table.addCell(createCell(obj.getQuantityReceived(), false));
-//            table.addCell(createCell(obj.getIssuedTo(), false));
-//            table.addCell(createCell(obj.getQuantityIssued(), false));
-//            table.addCell(createCell(obj.getBalance(), false));
         }
 
         // Add the table to the document
