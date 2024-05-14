@@ -6,6 +6,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.opencsv.CSVWriter;
+import fhi360.it.assetverify.asset.model.Asset;
 import fhi360.it.assetverify.inventory.dto.InventoryDto;
 import fhi360.it.assetverify.exception.ResourceNotFoundException;
 import fhi360.it.assetverify.inventory.model.Inventory;
@@ -243,5 +244,14 @@ public class InventoryController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("inventory/search")
+    public ResponseEntity<Page<Inventory>> searchInventories(@RequestParam("query") String query, Pageable pageable) {
+        Page<Inventory> searchInventories = inventoryServices.searchInventory(query, pageable);
+        if (searchInventories.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(searchInventories);
     }
 }

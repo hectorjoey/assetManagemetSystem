@@ -1,11 +1,7 @@
 package fhi360.it.assetverify.issueLog.controller;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import fhi360.it.assetverify.asset.dto.AssetDto;
-import fhi360.it.assetverify.asset.model.Asset;
 import fhi360.it.assetverify.exception.ResourceNotFoundException;
 import fhi360.it.assetverify.inventory.model.Inventory;
 import fhi360.it.assetverify.issueLog.dto.IssueLogDto;
@@ -19,9 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +24,6 @@ import javax.validation.Valid;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +39,7 @@ public class IssueLogController {
 
     @GetMapping("all-issuelogs")
     List<IssueLog> getIssueLogs() {
-        return issueLogService.getAllIssueLogs();
+        return issueLogRepository.findAll();
     }
 
     @GetMapping("issuelogs")
@@ -93,18 +86,17 @@ public class IssueLogController {
 //        return issueLogRepository.findByDescription(description);
 //    }
 
-    @GetMapping("search")
+    @GetMapping("issuelogs/search")
     public Page<IssueLog> search(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate, @RequestParam("page") int page) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatterUtil.createDateTimeFormatter("dd/MM/yyyy");
         LocalDate start = LocalDate.parse(startDate, dateTimeFormatter);
         LocalDate end = LocalDate.parse(endDate, dateTimeFormatter);
 
-
         DateTimeFormatter desiredFormats = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedStartDate = start.format(desiredFormats);
         String formattedEndDate = end.format(desiredFormats);
 
-        return issueLogService.searchByDate(formattedStartDate, formattedEndDate, PageRequest.of(page - 1, 10));
+        return issueLogServices.searchByDate(formattedStartDate, formattedEndDate, PageRequest.of(page - 1, 10));
     }
 
     @GetMapping("date/all-issuelogs")

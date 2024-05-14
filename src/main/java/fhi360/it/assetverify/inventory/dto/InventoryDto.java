@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class InventoryDto {
     private Long id;
+    private String date;
     private String states;
     private String description;
     private String dateReceived;

@@ -1,5 +1,6 @@
 package fhi360.it.assetverify.inventory.serviceImpl;
 
+import fhi360.it.assetverify.asset.model.Asset;
 import fhi360.it.assetverify.inventory.dto.InventoryDto;
 import fhi360.it.assetverify.inventory.model.Inventory;
 import fhi360.it.assetverify.inventory.repository.InventoryRepository;
@@ -62,6 +63,7 @@ public class InventoryServiceImpl implements InventoryService {
     public InventoryDto createInventory(InventoryDto inventoryDTO) {
         // Map DTO to entity
         Inventory inventory = new Inventory();
+        inventory.setDate(inventoryDTO.getDate());
         inventory.setStates(inventoryDTO.getStates());
         inventory.setDescription(inventoryDTO.getDescription()+"("+inventory.getStates()+")");
         inventory.setVendor(inventoryDTO.getVendor());
@@ -92,6 +94,7 @@ public class InventoryServiceImpl implements InventoryService {
     private InventoryDto mapToDTO(Inventory inventory) {
         InventoryDto inventoryDto = new InventoryDto();
         inventoryDto.setId(inventory.getId());
+        inventoryDto.setDate(inventoryDto.getDate());
         inventoryDto.setStates(inventory.getStates());
         inventoryDto.setDescription(inventory.getDescription());
         inventoryDto.setDateReceived(inventory.getDateReceived());
@@ -106,6 +109,7 @@ public class InventoryServiceImpl implements InventoryService {
     //
     private IssueLog createIssueLog(Inventory inventory) {
         IssueLog issueLog = new IssueLog();
+        issueLog.setDate(inventory.getDate());
         issueLog.setStates(inventory.getStates());
         issueLog.setDescription(inventory.getDescription());
         issueLog.setDateReceived(inventory.getDateReceived());
@@ -164,5 +168,11 @@ public class InventoryServiceImpl implements InventoryService {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(inventories, HttpStatus.OK);
+    }
+
+
+
+    public Page<Inventory> searchInventory(String query, Pageable pageable) {
+        return inventoryRepository.searchInventory(query, pageable);
     }
 }

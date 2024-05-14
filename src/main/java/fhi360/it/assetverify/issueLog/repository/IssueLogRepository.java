@@ -20,7 +20,8 @@ public interface IssueLogRepository extends JpaRepository<IssueLog, Long> {
 
     List<IssueLog> findByInventoryId(Long inventoryId);
 //    Page<IssueLog> findByDateReceivedBetween(String startDate, String endDate, Pageable pageable);
-    Page<IssueLog> findByDateIssuedBetween(String startDate, String endDate, Pageable pageable);
+//    Page<IssueLog> findByDateIssuedBetween(String startDate, String endDate, Pageable pageable);
+    Page<IssueLog> findByDateBetween(String startDate, String endDate, Pageable pageable);
 
     List<IssueLog> findByDateReceivedBetween(String startDate, String endDate);
 

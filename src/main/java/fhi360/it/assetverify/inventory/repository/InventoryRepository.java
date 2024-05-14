@@ -30,7 +30,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
     @Query("SELECT i FROM Inventory i WHERE " +
             "i.description LIKE CONCAT('%', :query, '%') " +
-            "OR i.states LIKE CONCAT('%', :query, '%')" +
             "OR i.poNumber LIKE CONCAT('%', :query, '%')")
     Page<Inventory> searchInventory(String query, Pageable pageable);
 

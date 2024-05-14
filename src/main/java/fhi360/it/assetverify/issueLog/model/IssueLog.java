@@ -15,6 +15,7 @@ public class IssueLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private String date;
     private String states;
     private String description;
     private String dateReceived;
@@ -28,6 +29,4 @@ public class IssueLog {
     private String quantityIssued;
     private String balance;
     private Long inventoryId;
-//    private Long userId;
-
 }
