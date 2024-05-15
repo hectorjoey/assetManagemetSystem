@@ -52,8 +52,8 @@ public class IssueLogServiceImpl implements IssueLogService {
         return String.valueOf(total);
     }
 
-    public Page<IssueLog> searchByDate(String startDate, String endDate, Pageable pageable) {
-        return issueLogRepository.findByDateBetween(startDate, endDate, pageable);
+    public Page<IssueLog> searchByDate(String states, String startDate, String endDate, Pageable pageable) {
+        return issueLogRepository.findByDateBetweenAndStates(states, startDate, endDate, pageable);
     }
 
     public List<IssueLog> findByDescription(String description) {
@@ -94,5 +94,10 @@ public class IssueLogServiceImpl implements IssueLogService {
     private String calBalance(String balance, String quantityIssued) {
         int stockBalance = Integer.parseInt(balance) - Integer.parseInt(quantityIssued);
         return String.valueOf(stockBalance);
+    }
+
+
+    public List<IssueLog> getLogByStates(String states, Pageable pageable){
+        return  issueLogRepository.findByStates(states, pageable);
     }
 }

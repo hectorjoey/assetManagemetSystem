@@ -106,7 +106,7 @@ public class InventoryServiceImpl implements InventoryService {
         inventoryDto.setBalance(inventory.getBalance());
         return inventoryDto;
     }
-    //
+
     private IssueLog createIssueLog(Inventory inventory) {
         IssueLog issueLog = new IssueLog();
         issueLog.setDate(inventory.getDate());
@@ -121,7 +121,6 @@ public class InventoryServiceImpl implements InventoryService {
         issueLog.setInventoryId(inventory.getId());
         issueLog.setBalance(inventory.getBalance());
 
-        // Set other fields accordingly
         return issueLog;
     }
 

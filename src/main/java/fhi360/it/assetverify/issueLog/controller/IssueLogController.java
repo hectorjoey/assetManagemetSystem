@@ -86,8 +86,8 @@ public class IssueLogController {
 //        return issueLogRepository.findByDescription(description);
 //    }
 
-    @GetMapping("issuelogs/search")
-    public Page<IssueLog> search(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate, @RequestParam("page") int page) {
+    @GetMapping("issuelogs/search/{states}")
+    public Page<IssueLog> search(@PathVariable("states") String states, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate, @RequestParam("page") int page) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatterUtil.createDateTimeFormatter("dd/MM/yyyy");
         LocalDate start = LocalDate.parse(startDate, dateTimeFormatter);
         LocalDate end = LocalDate.parse(endDate, dateTimeFormatter);
@@ -96,7 +96,7 @@ public class IssueLogController {
         String formattedStartDate = start.format(desiredFormats);
         String formattedEndDate = end.format(desiredFormats);
 
-        return issueLogServices.searchByDate(formattedStartDate, formattedEndDate, PageRequest.of(page - 1, 10));
+        return issueLogServices.searchByDate(states, formattedStartDate, formattedEndDate, PageRequest.of(page - 1, 10));
     }
 
     @GetMapping("date/all-issuelogs")
@@ -157,5 +157,10 @@ public class IssueLogController {
         int agg = Integer.parseInt(balance) + Integer.parseInt(quantityIssued);
         int totalBalance = agg - Integer.parseInt(issuedQuantity);
         return String.valueOf(totalBalance);
+    }
+
+    @GetMapping("issueLog/{states}")
+    public List<IssueLog> getLogsByState(@PathVariable("states") String states, Pageable pageable) {
+        return issueLogServices.getLogByStates(states, pageable);
     }
 }
